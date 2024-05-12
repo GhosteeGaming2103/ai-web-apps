@@ -1,4 +1,4 @@
 export interface Message {
-  user: string;
-  message: string;
+  role: string;
+  content: string;
 }

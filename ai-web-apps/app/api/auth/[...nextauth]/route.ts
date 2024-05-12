@@ -19,6 +19,7 @@ export const authOptions = {
 
       if (user) {
         console.log(user);
+
         const response = await axios.post("http://localhost:3000/api/checkUser", {
           email: user.email,
         });

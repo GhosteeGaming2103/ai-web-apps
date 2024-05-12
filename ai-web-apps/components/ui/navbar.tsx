@@ -1,6 +1,7 @@
 import React from "react";
 import AuthButton from "../auth/AuthButton";
 import Avatar from "./Avatar";
+import BottomNavButtons from "./bottomNavButtons";
 
 const Navbar = async () => {
   return (
@@ -38,6 +39,9 @@ const Navbar = async () => {
         </div>
         <AuthButton />
         <Avatar />
+      </div>
+      <div className="btm-nav lg:hidden">
+        <BottomNavButtons />
       </div>
     </>
   );
