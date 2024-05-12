@@ -6,7 +6,7 @@ import { Message } from "@/interfaces/chatbot";
 import axios, { Axios } from "axios";
 
 const Chatbox = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,21 +21,24 @@ const Chatbox = () => {
   };
 
   const handleSubmit = async () => {
-    setText("");
     setLoading(true);
     if (text.trim() === "") return;
     setMessages((prevMessages) => [
       ...prevMessages,
-      { user: "right", message: text },
+      { role: "user", content: text },
     ]);
-    let result = await axios.post("http://localhost:8080/", {
+    let msg = text;
+    setText("");
+    let result = await axios.post("/api/chatbot", {
       content: text,
+      messages: [...messages, { role: "user", content: msg }], // Using the latest state of messages
     });
     setMessages((prevMessages) => [
       ...prevMessages,
-      { user: "left", message: result.data },
+      { role: "assistant", content: result.data },
     ]);
     setLoading(false);
+    setText(""); // Clearing the text input after submit
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,9 +46,7 @@ const Chatbox = () => {
   };
 
   useEffect(() => {
-    setLoading(false);
     if (containerRef.current) {
-      console.log(containerRef.current);
       // Scroll to the bottom of the container
       containerRef.current.scrollIntoView({
         behavior: "smooth",
@@ -53,37 +54,37 @@ const Chatbox = () => {
         inline: "nearest",
       });
     }
-  }, []);
+  }, [messages]); // Update scroll when messages change
 
   return (
     <>
       <div className="bg-base-100 w-screen h-screen ">
         <div
           ref={containerRef}
-          className="bg-base-300 w-11/12 h-[75%] max-h-[75%] mx-auto overflow-y-scroll flex flex-col flex-col-reverse chat-container"
+          className="bg-base-300 w-11/12 h-[75%] max-h-[65%] mx-auto overflow-y-scroll flex flex-col-reverse chat-container"
         >
           <div className="flex flex-col w-full justify-end pb-5 px-3 ">
             {messages.map((message, index) => {
-              switch (message.user) {
-                case "left":
+              switch (message.role) {
+                case "assistant":
                   return (
                     <div key={index} className="chat chat-start">
                       <div
                         key={index}
                         className="chat-bubble chat-bubble-secondary"
                       >
-                        {message.message}
+                        {message.content}
                       </div>
                     </div>
                   );
-                case "right":
+                case "user":
                   return (
                     <div key={index} className="chat chat-end">
                       <div
                         key={index}
                         className="chat-bubble chat-bubble-primary"
                       >
-                        {message.message}
+                        {message.content}
                       </div>
                     </div>
                   );
