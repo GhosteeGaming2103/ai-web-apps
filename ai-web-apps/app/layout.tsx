@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/ui/navbar";
 import BottomNav from "@/components/ui/bottomnav";
+import SessionProvider from "@/components/ui/SessionProvider";
+import { getServerSession } from "next-auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,14 +18,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = getServerSession();
   return (
     <html data-theme="dim" lang="en">
       <body className={inter.className}>
-        <header>
-          <Navbar />
-        </header>
-        {children}
-        <BottomNav />
+        <SessionProvider>
+          <main>
+            <header>
+              <Navbar />
+            </header>
+            {children}
+            <BottomNav />
+          </main>
+        </SessionProvider>
       </body>
     </html>
   );

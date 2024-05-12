@@ -1,6 +1,8 @@
 import React from "react";
+import AuthButton from "../auth/AuthButton";
+import Avatar from "./Avatar";
 
-const Navbar = () => {
+const Navbar = async () => {
   return (
     <>
       <div className="navbar bg-base-100">
@@ -34,6 +36,8 @@ const Navbar = () => {
             </ul>
           </details>
         </div>
+        <AuthButton />
+        <Avatar />
       </div>
     </>
   );

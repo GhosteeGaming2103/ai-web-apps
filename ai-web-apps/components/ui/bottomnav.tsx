@@ -12,6 +12,10 @@ const BottomNav = () => {
       button.classList.remove("active");
     });
     const element = e.currentTarget;
+    const value = element.value;
+    if (value) {
+      console.log(value);
+    }
     element?.classList.toggle("active");
   };
 
@@ -34,7 +38,11 @@ const BottomNav = () => {
             />
           </svg>
         </button>
-        <button onClick={handleClick} className="hover:bg-base-200">
+        <button
+          onClick={handleClick}
+          value={"test123"}
+          className="hover:bg-base-200"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
