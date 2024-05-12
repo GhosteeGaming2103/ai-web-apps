@@ -61,7 +61,7 @@ const Chatbox = () => {
       <div className="bg-base-100 w-screen h-screen ">
         <div
           ref={containerRef}
-          className="bg-base-300 w-11/12 h-[75%] max-h-[65%] mx-auto overflow-y-scroll flex flex-col-reverse chat-container"
+          className="bg-base-300 w-11/12 h-[65%] md:h-[80%] mx-auto overflow-y-scroll flex flex-col-reverse chat-container"
         >
           <div className="flex flex-col w-full justify-end pb-5 px-3 ">
             {messages.map((message, index) => {

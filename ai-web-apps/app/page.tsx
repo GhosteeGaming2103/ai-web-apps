@@ -7,9 +7,5 @@ export default async function Home() {
   // if (!session || !session.user) {
   //   return redirect("/api/auth/signin");
   // }
-  return (
-    <main className="">
-      <Chatbox />
-    </main>
-  );
+  return <main className=""></main>;
 }
