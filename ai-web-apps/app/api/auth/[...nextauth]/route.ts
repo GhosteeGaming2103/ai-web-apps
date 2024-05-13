@@ -45,7 +45,7 @@ export const authOptions = {
       console.log("Session", session);
       return session;
     }
-  }
+  },
 }
 
 // Ignore Error

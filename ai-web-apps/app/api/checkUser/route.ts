@@ -1,18 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import mysql from "mysql2/promise";
 
-export async function GET(req: NextRequest, res: NextResponse) {
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Dayton014908",
-    database: "test_db",
-  });
-  console.log("CALLED");
-  const [rows, fields] = await connection.execute("SELECT * FROM test_table");
-  return NextResponse.json(rows);
-}
-
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const body = await req.json();
