@@ -37,7 +37,7 @@ const NoteModal = ({
           noteid: noteId,
           title: noteTitle,
           content: noteContent,
-          userid: session?.user?.id,
+          userid: 10,
         });
         if (putResult.status === 200) {
           console.log(putResult.data);
