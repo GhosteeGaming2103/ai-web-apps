@@ -20,7 +20,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
     await connection.execute("INSERT INTO users (email) VALUES (?)", [
       body.email,
     ]);
-    return NextResponse.json({ message: "User created" });
+    const [rows, fields] = await connection.execute("SELECT * FROM users WHERE email = ?", [body.email]);
+    return NextResponse.json({ message: "User created", user: rows });
   }
   else {
     return NextResponse.json({ message: "User already exists", user: rows });

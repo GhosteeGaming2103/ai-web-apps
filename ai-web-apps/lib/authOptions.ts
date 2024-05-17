@@ -14,14 +14,13 @@ export const authOptions = {
   callbacks: {
     async signIn({ user }: any) {
       // call api/createUser
-
       if (user) {
         console.log(user);
 
         const response = await axios.post("http://localhost:3000/api/checkUser", {
           email: user.email,
         });
-        console.log(response.data);
+        console.log("RESPONE: ", response.data);
         const userId = response.data.user[0].id;
         user.id = userId;
         return true
@@ -34,13 +33,14 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
       }
+      console.log("TOKEN");
       return token;
     },
     async session({ session, token }: any) {
       if (token) {
         session.user.id = token.id.toString();
       }
-      console.log("Session", session);
+      console.log("Session");
       return session;
     }
   },

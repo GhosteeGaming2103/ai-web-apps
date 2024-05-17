@@ -20,9 +20,6 @@ export default function RootLayout({
   const session = getServerSession();
   return (
     <html data-theme="dim" lang="en">
-      <head>
-        <link rel="icon" href="/public/images/favicon.ico" sizes="any" />
-      </head>
       <body className={inter.className}>
         <SessionProvider>
           <main>
