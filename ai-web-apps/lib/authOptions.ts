@@ -17,36 +17,11 @@ export const authOptions = {
       // call api/createUser
       if (user) {
 
-        // // const response = await axios.post(process.env.URL + "/api/checkUser", {
-        // //   email: user.email,
-        // // });
-        // // console.log("RESPONE: ", response.data);
-        // let temp = undefined;
-        // const connection = await mysql.createConnection({
-        //   host: process.env.DATABASE_HOST,
-        //   user: process.env.DATABASE_USER,
-        //   password: process.env.DATABASE_PASSWORD,
-        //   database: process.env.DATABASE_NAME,
-        // });
-        // // Check if the email already exists
-        // const [rows, fields] = await connection.execute(
-        //   "SELECT * FROM users WHERE email = ?",
-        //   [user.email]
-        // );
-        // if (Array.isArray(rows) && rows.length === 0) {
-        //   await connection.execute("INSERT INTO users (email) VALUES (?)", [
-        //     user.email,
-        //   ]);
-        //   const [rows] = await connection.execute("SELECT * FROM users WHERE email = ?", [user.email]);
-        //   temp = rows as any;
-        //   user.id = temp[0].id;
-        // }
-        // else {
-        //   temp = rows as any;
-        //   user.id = temp[0].id;
-        // }
-        // const userId = 8
-        // user.id = userId;
+        const response = await axios.post(process.env.URL + "/api/checkUser", {
+            email: user.email,
+        });
+        const userId = response.user[0].id
+        user.id = userId;
         return true
       }
       else {
