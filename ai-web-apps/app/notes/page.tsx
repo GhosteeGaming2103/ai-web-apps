@@ -30,7 +30,7 @@ const Notes = () => {
   };
   const fetchNotes = async () => {
     const response = await axios.post("/api/notes", {
-      userid: 1,
+      userid: 10,
       mode: "get",
     });
     if (response.status === 200) {
