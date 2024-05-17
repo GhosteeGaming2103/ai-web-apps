@@ -74,6 +74,8 @@ const NoteModal = ({
   };
 
   useEffect(() => {
+if(session){
+window.session = session}
     setNoteTitle(note.title);
     setNoteContent(note.content);
     if (note.content) {
