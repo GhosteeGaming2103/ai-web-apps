@@ -22,13 +22,9 @@ const NoteCard = ({
   const { data: session } = useSession();
   return (
     <div
-      className="card bg-slate-200 text-primary-content max-h-1/4 "
+      className="card bg-slate-200 text-primary-content max-h-1/4 cursor-pointer "
       onClick={() => {
         if (noteClick) noteClick(id);
-        // setMode("edit");
-        // (
-        //   document.getElementById(`note_modal_${id}`) as HTMLDialogElement
-        // ).showModal();
       }}
     >
       <div className="card-body max-h-[250px] overflow-hidden">
@@ -36,11 +32,6 @@ const NoteCard = ({
         <p className="text-wrap" style={{ overflowWrap: "break-word" }}>
           {content}
         </p>
-        {/* <div className="card-actions justify-end">
-          <button className="absolute bottom-4">
-            <Pencil />
-          </button>
-        </div> */}
       </div>
     </div>
   );

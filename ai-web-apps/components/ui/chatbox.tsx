@@ -3,12 +3,15 @@ import { v4 as uuidv4 } from "uuid";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Message } from "@/interfaces/chatbot";
+import { setActive } from "./bottomNavButtons";
 import axios, { Axios } from "axios";
 
 const Chatbox = () => {
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    { role: "system", content: "Keep your responses to 50 tokens" },
+  ]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const scrollContainer = () => {
@@ -39,6 +42,14 @@ const Chatbox = () => {
     ]);
     setLoading(false);
     setText(""); // Clearing the text input after submit
+    sessionStorage.setItem(
+      "messages",
+      JSON.stringify([
+        ...messages,
+        { role: "user", content: msg },
+        { role: "assistant", content: result.data },
+      ])
+    );
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,22 +57,31 @@ const Chatbox = () => {
   };
 
   useEffect(() => {
-    if (containerRef.current) {
-      // Scroll to the bottom of the container
-      containerRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
-      });
+    try {
+      setActive(window.location.href);
+      if (containerRef.current) {
+        // Scroll to the bottom of the container
+        containerRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+          inline: "nearest",
+        });
+      }
+      const messages = sessionStorage.getItem("messages");
+      if (messages) {
+        setMessages(JSON.parse(messages));
+      }
+    } catch (e) {
+      console.log(e);
     }
-  }, [messages]); // Update scroll when messages change
+  }, []); // Update scroll when messages change
 
   return (
     <>
-      <div className="bg-base-100 w-screen h-screen ">
+      <div className="bg-base-100 w-screen h-[90vh]">
         <div
           ref={containerRef}
-          className="bg-base-300 w-11/12 h-[65%] md:h-[80%] mx-auto overflow-y-scroll flex flex-col-reverse chat-container"
+          className="bg-base-300 w-11/12 h-[80%] md:h-[90%] mx-auto overflow-y-scroll flex flex-col-reverse chat-container"
         >
           <div className="flex flex-col w-full justify-end pb-5 px-3 ">
             {messages.map((message, index) => {

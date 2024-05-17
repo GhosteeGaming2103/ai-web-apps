@@ -2,7 +2,7 @@ import Chatbox from "@/components/ui/chatbox";
 
 export default function ChatPage() {
   return (
-    <div>
+    <div className="overflow-hidden">
       <Chatbox />
     </div>
   );

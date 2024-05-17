@@ -3,11 +3,20 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { Note } from "@/interfaces/note";
-const NoteModal = ({ note, mode }: { note: Note; mode: string }) => {
+import { stat } from "fs";
+const NoteModal = ({
+  getNotes,
+  note,
+  mode,
+}: {
+  note: Note;
+  mode: string;
+  getNotes: () => Promise<void>;
+}) => {
   const [characterCount, setCharacterCount] = useState(250);
-  const [id, setId] = useState(note.id);
-  const [noteTitle, setNoteTitle] = useState(note.title || "");
-  const [noteContent, setNoteContent] = useState(note.content || "");
+  const [noteTitle, setNoteTitle] = useState("");
+  const [noteContent, setNoteContent] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { data: session } = useSession();
   const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -19,31 +28,61 @@ const NoteModal = ({ note, mode }: { note: Note; mode: string }) => {
     setNoteContent(val);
   };
 
-  const handleSubmit = () => {
-    console.log(session?.user.id);
+  const handleSubmit = async () => {
+    setLoading(true);
     if (!session?.user?.id) return;
+    let noteId = note.id;
     switch (mode) {
-      case "view":
-        break;
       case "edit":
-        axios.put("/api/notes", {
-          id,
+        const putResult = await axios.put("/api/notes", {
+          noteid: noteId,
           title: noteTitle,
           content: noteContent,
           userid: session?.user?.id,
         });
+        if (putResult.status === 200) {
+          console.log(putResult.data);
+          getNotes();
+        }
+        break;
+      case "new":
+        const result = await axios.post("/api/notes", {
+          title: noteTitle,
+          content: noteContent,
+          userid: session?.user?.id,
+        });
+        if (result.status === 200) {
+          console.log(result.data);
+          getNotes();
+        }
         break;
     }
-    // Perform the form data submission logic here
-    // You can access the updated noteTitle and noteContent values from the state
+    setLoading(false);
+    (document.getElementById(`note_modal`) as HTMLDialogElement).close();
+  };
+
+  const handleEnhance = async () => {
+    setLoading(true);
+    if (noteContent === "") return;
+    const result = await axios.post("/api/notes/enhance", {
+      content: noteContent,
+    });
+    if (result.status === 200) {
+      setNoteContent(result.data);
+      setLoading(false);
+      setCharacterCount(result.data.length);
+    }
   };
 
   useEffect(() => {
     setNoteTitle(note.title);
     setNoteContent(note.content);
-    if (note.content.length > 0) {
+    if (note.content) {
       setCharacterCount(note.content.length);
+    } else {
+      setCharacterCount(0);
     }
+    console.log("NOTE: ", noteContent);
   }, [note]);
   return (
     <dialog id={`note_modal`} className="modal">
@@ -58,26 +97,51 @@ const NoteModal = ({ note, mode }: { note: Note; mode: string }) => {
             setNoteTitle(e.target.value);
           }}
         />
+        <div className="h-[175px]">
+          {loading && (
+            <div className="absolute flex items-center gap-5 text-black left-[240px] top-[140px]">
+              <span className="loading loading-spinner loading-lg"></span>
+            </div>
+          )}
+          {!loading && (
+            <textarea
+              className="textarea textarea-outline h-fit bg-transparent text-black w-full overflow-hidden"
+              placeholder="Enter Note"
+              color="bg-blue-500"
+              value={noteContent || ""}
+              onChange={handleChange}
+              rows={5}
+              style={{ resize: "none" }} // Add this line to disable resizing
+            ></textarea>
+          )}
+        </div>
 
-        <textarea
-          className="textarea textarea-outline h-fit bg-transparent text-black w-full overflow-hidden"
-          placeholder="Enter Note"
-          color="bg-blue-500"
-          value={noteContent || ""}
-          onChange={handleChange}
-          rows={5}
-          style={{ resize: "none" }} // Add this line to disable resizing
-        ></textarea>
         <div className="modal-action">
+          <button
+            onClick={handleEnhance}
+            className="btn btn-primary"
+            disabled={loading}
+          >
+            AI Enhance
+          </button>
           <button
             className="btn btn-secondary text-white"
             onClick={handleSubmit}
+            disabled={loading}
           >
             Save
           </button>
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}
-            <button className="btn">Close</button>
+            <button
+              className="btn"
+              onClick={() => {
+                setNoteTitle(note.title || "");
+                setNoteContent(note.content || "");
+              }}
+            >
+              Close
+            </button>
           </form>
         </div>
         <div className="absolute bottom-4 text-black">
