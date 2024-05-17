@@ -14,12 +14,6 @@ const NoteCard = ({
   title: string;
   content: string;
 }) => {
-  const [noteTitle, setNoteTitle] = useState(title);
-  const [noteContent, setNoteContent] = useState(content);
-  const [characterCount, setCharacterCount] = useState(content.length);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [mode, setMode] = useState<"view" | "edit">("view");
-  const { data: session } = useSession();
   return (
     <div
       className="card bg-slate-200 text-primary-content max-h-1/4 cursor-pointer "

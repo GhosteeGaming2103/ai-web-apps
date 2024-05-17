@@ -17,6 +17,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         "SELECT * FROM notes WHERE userid = ?",
         [userId]
       );
+      console.log("METHOD GET", userId)
       return NextResponse.json({ status: "200", data: rows });
     } else {
       await connection.execute(

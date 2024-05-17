@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { Note } from "@/interfaces/note";
-import { stat } from "fs";
 const NoteModal = ({
   getNotes,
   note,
