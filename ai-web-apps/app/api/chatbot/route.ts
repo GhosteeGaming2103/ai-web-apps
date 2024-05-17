@@ -7,10 +7,11 @@ const openai = new OpenAI();
 export async function POST(req: NextRequest, res: NextResponse) {
   const body = await req.json();
   const messages = body.messages;
-  console.log(messages);
   const completion = await openai.chat.completions.create({
-    model: "gpt-4-turbo",
+    model: "gpt-4o",
     messages: messages,
+    max_tokens: 50,
+
   })
   return NextResponse.json(completion.choices[0].message.content);
 }
