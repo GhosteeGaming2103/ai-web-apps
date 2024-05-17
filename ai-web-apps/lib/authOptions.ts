@@ -17,10 +17,11 @@ export const authOptions = {
       // call api/createUser
       if (user) {
 
-        const response = await axios.post(process.env.URL + "/api/checkUser", {
-            email: user.email,
+                const response = await axios.post(process.env.URL + "/api/checkUser", {
+          email: user.email,
         });
-        const userId = response.user[0].id
+        console.log("RESPONE: ", response.data);
+        const userId = response.data.user[0].id;
         user.id = userId;
         return true
       }
