@@ -78,7 +78,7 @@ const Chatbox = () => {
 
   return (
     <>
-      <div className="bg-base-100 w-screen h-[90vh]">
+      <div className="bg-base-100 w-screen h-[80vh]">
         <div
           ref={containerRef}
           className="bg-base-300 w-11/12 h-[80%] md:h-[90%] mx-auto overflow-y-scroll flex flex-col-reverse chat-container"
