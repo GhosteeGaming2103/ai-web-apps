@@ -16,13 +16,11 @@ export const authOptions = {
     async signIn({ user }: any) {
       // call api/createUser
       if (user) {
-
-                const response = await axios.post(process.env.URL + "/api/checkUser", {
+        const response = await axios.post(process.env.URL + "/api/checkUser", {
           email: user.email,
         });
-        console.log("RESPONE: ", response.data);
-        const userId = response.data.user[0].id;
-        user.id = userId;
+        const temp = response.data.user[0];
+        user.id = temp.id;
         return true
       }
       else {
@@ -31,16 +29,14 @@ export const authOptions = {
     },
     async jwt({ token, user }: any) {
       if (user) {
-        // token.id = user.id;
+        token.id = user.id;
       }
-      console.log("TOKEN");
       return token;
     },
     async session({ session, token }: any) {
       if (token) {
-        // session.user.id = token.id.toString();
+        session.user.id = token.id.toString();
       }
-      console.log("Session");
       return session;
     }
   },

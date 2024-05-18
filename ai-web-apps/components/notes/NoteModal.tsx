@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { Note } from "@/interfaces/note";
+import { CircleX } from "lucide-react";
 const NoteModal = ({
   getNotes,
   note,
@@ -40,7 +41,6 @@ const NoteModal = ({
           userid: 10,
         });
         if (putResult.status === 200) {
-          console.log(putResult.data);
           getNotes();
         }
         break;
@@ -51,7 +51,6 @@ const NoteModal = ({
           userid: session?.user?.id,
         });
         if (result.status === 200) {
-          console.log(result.data);
           getNotes();
         }
         break;
@@ -82,7 +81,6 @@ const NoteModal = ({
     } else {
       setCharacterCount(0);
     }
-    console.log("NOTE: ", noteContent);
   }, [note]);
   return (
     <dialog id={`note_modal`} className="modal">
@@ -134,17 +132,17 @@ const NoteModal = ({
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}
             <button
-              className="btn"
+              className="btn btn-ghost absolute top-5 right-0"
               onClick={() => {
                 setNoteTitle(note.title || "");
                 setNoteContent(note.content || "");
               }}
             >
-              Close
+              <CircleX className="text-black size-[90%]" />
             </button>
           </form>
         </div>
-        <div className="absolute bottom-4 text-black">
+        <div className="absolute bottom-9 left-3 text-black">
           {250 - characterCount} Characters Left
         </div>
       </div>

@@ -17,7 +17,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         "SELECT * FROM notes WHERE userid = ?",
         [userId]
       );
-      console.log("METHOD GET", userId)
       return NextResponse.json({ status: "200", data: rows });
     } else {
       await connection.execute(
@@ -38,7 +37,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 export async function PUT(req: NextRequest, res: NextResponse) {
   try {
     const body = await req.json();
-    console.log("BODY:", body);
     const connection = await mysql.createConnection({
       host: process.env.DATABASE_HOST,
       user: process.env.DATABASE_USER,
