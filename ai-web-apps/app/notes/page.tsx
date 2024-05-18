@@ -6,6 +6,7 @@ import { Note } from "@/interfaces/note";
 import { Plus } from "lucide-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 const Notes = () => {
   const { data: session, status } = useSession();
@@ -20,31 +21,39 @@ const Notes = () => {
   }, [session]);
 
   const fetchNotes = async () => {
-    if (session?.user?.id) {
-      const response = await axios.post("/api/notes", {
-        userid: session.user.id,
-        mode: "get",
-      });
-      if (response.status === 200) {
-        setNotesArray(response.data.data);
+    try {
+      if (session?.user?.id) {
+        const response = await axios.post("/api/notes", {
+          userid: session.user.id,
+          mode: "get",
+        });
+        if (response.status === 200) {
+          setNotesArray(response.data.data);
+        }
       }
+    } catch (e) {
+      console.log("Error fetching Notes ", e);
     }
   };
 
   const noteClickHandler = (note: Note) => {
-    if (note.id > 0) {
-      setMode("edit");
-      setNote(note);
-    } else {
-      setMode("new");
-      setNote({
-        id: -1,
-        title: "",
-        content: "",
-        userid: -1,
-      });
+    try {
+      if (note.id > 0) {
+        setMode("edit");
+        setNote(note);
+      } else {
+        setMode("new");
+        setNote({
+          id: -1,
+          title: "",
+          content: "",
+          userid: -1,
+        });
+      }
+      (document.getElementById(`note_modal`) as HTMLDialogElement).showModal();
+    } catch (e) {
+      console.log("Error Clicking Note", e);
     }
-    (document.getElementById(`note_modal`) as HTMLDialogElement).showModal();
   };
 
   if (status === "loading") {
