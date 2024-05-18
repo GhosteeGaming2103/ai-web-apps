@@ -8,7 +8,7 @@ import HomeButton from "./HomeButton";
 const Navbar = async () => {
   return (
     <>
-      <div className="navbar bg-base-100">
+      <div className="navbar bg-base-100 z-50">
         <div className="flex-1">
           <HomeButton />
         </div>

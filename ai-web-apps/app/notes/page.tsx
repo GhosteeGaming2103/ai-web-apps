@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { setActive } from "@/components/ui/bottomNavButtons";
 
 const Notes = () => {
   const { data: session } = useSession();
@@ -52,6 +53,7 @@ const Notes = () => {
 
   useEffect(() => {
     fetchNotes();
+    setActive(window.location.href);
   }, []);
   return (
     <>
