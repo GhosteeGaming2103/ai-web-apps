@@ -9,7 +9,7 @@ export default async function Home() {
         <h1 className="text-center text-3xl font-bold">
           Alternate Intelligence
         </h1>
-        <div className="flex flex-col lg:flex-row gap-10 items-center justify-center mt-5 lg:mx-4">
+        <div className="flex flex-col lg:flex-row gap-10 items-center justify-center mt-5 lg:mx-4 max-h-[75%]">
           <ChatBotCard />
           <NoteCard />
         </div>

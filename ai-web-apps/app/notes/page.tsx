@@ -9,15 +9,10 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 const Notes = () => {
+  const { data: session } = useSession();
   const [mode, setMode] = useState<"new" | "edit">("new");
   const [notesArray, setNotesArray] = useState<Note[]>([]); // [{} as Note, {} as Note
   const [note, setNote] = useState<Note>({} as Note);
-
-  useEffect(() => {
-    if (session) {
-      fetchNotes();
-    }
-  }, [session]);
 
   const fetchNotes = async () => {
     try {
@@ -52,15 +47,6 @@ const Notes = () => {
       (document.getElementById(`note_modal`) as HTMLDialogElement).showModal();
     } catch (e) {
       console.log("Error Clicking Note", e);
-    }
-  };
-  const fetchNotes = async () => {
-    const response = await axios.post("/api/notes", {
-      userid: 10,
-      mode: "get",
-    });
-    if (response.status === 200) {
-      setNotesArray(response.data.data);
     }
   };
 
