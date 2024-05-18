@@ -9,9 +9,8 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 const Notes = () => {
-  const { data: session, status } = useSession();
   const [mode, setMode] = useState<"new" | "edit">("new");
-  const [notesArray, setNotesArray] = useState<Note[]>([]);
+  const [notesArray, setNotesArray] = useState<Note[]>([]); // [{} as Note, {} as Note
   const [note, setNote] = useState<Note>({} as Note);
 
   useEffect(() => {
@@ -55,49 +54,47 @@ const Notes = () => {
       console.log("Error Clicking Note", e);
     }
   };
+  const fetchNotes = async () => {
+    const response = await axios.post("/api/notes", {
+      userid: 10,
+      mode: "get",
+    });
+    if (response.status === 200) {
+      setNotesArray(response.data.data);
+    }
+  };
 
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
-
-  if (!session) {
-    return <p>Not Logged In</p>;
-  }
-
+  useEffect(() => {
+    fetchNotes();
+  }, []);
   return (
     <>
       <div className="">
         <h1 className="text-2xl text-center">Notes</h1>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-3">
-          {notesArray.length > 0 ? (
-            notesArray.map((note) => (
-              <NoteCard
-                key={note.id}
-                noteClick={() => {
-                  noteClickHandler(note);
-                }}
-                id={note.id}
-                title={note.title}
-                content={note.content}
-              />
-            ))
-          ) : (
-            <p>No Notes</p>
-          )}
+          {notesArray.map((note) => (
+            <NoteCard
+              key={note.id}
+              noteClick={() => {
+                noteClickHandler(note as Note);
+              }}
+              id={note.id}
+              title={note.title}
+              content={note.content}
+            />
+          ))}
         </div>
-        <NoteModal getNotes={fetchNotes} note={note} mode={mode} />
+        <NoteModal getNotes={fetchNotes} note={note as Note} mode={mode} />
       </div>
 
-      {session.user?.id && (
-        <button
-          className="btn btn-circle absolute bottom-[80px] right-10"
-          onClick={() => {
-            noteClickHandler({} as Note);
-          }}
-        >
-          <Plus />
-        </button>
-      )}
+      <button
+        className="btn btn-circle absolute bottom-[80px] right-10"
+        onClick={() => {
+          noteClickHandler({} as Note);
+        }}
+      >
+        <Plus />
+      </button>
     </>
   );
 };
